@@ -44,7 +44,7 @@ local LocalPlayer = Players.LocalPlayer
 
 local function createDestroyTool()
     local tool = Instance.new("Tool")
-    tool.Name = "Zerstörer"
+    tool.Name = "Destroy"
     tool.RequiresHandle = false
 
     tool.Activated:Connect(function()
@@ -59,7 +59,7 @@ local function createDestroyTool()
 end
 
 local DestroyToolButton = Tab:CreateButton({
-    Name = "Zerstörer-Tool erhalten",
+    Name = "Destroy-Tool",
     Callback = function()
         local tool = createDestroyTool()
         tool.Parent = LocalPlayer.Backpack
