@@ -4,7 +4,7 @@ local Window = Rayfield:CreateWindow({
    Name = "Prisone Life",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Prisone Life script",
-   LoadingSubtitle = "by tt_g1212",
+   LoadingSubtitle = "by D3f4ult",
    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    DisableRayfieldPrompts = false,
