@@ -452,15 +452,3 @@ local Button = Tab:CreateButton({
       tool.Parent = game.Players.LocalPlayer.Backpack
    end,
 })
-
-
-local Tab = Window:CreateTab("🎮 Mini Games", 4483362458) -- Title, Image
-local Section = Tab:CreateSection("Flappy Bird")
-
-
-local Button = Tab:CreateButton({
-   Name = "Flappy Bird [by D3f4ult]",
-   Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/hannes12334/Roblox-scripts/refs/heads/main/Flappy%20Bird.txt"))()
-   end,
-})
