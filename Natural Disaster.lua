@@ -146,7 +146,7 @@ local Section = Tab:CreateSection("Spawn")
 
 
 Tab:CreateButton({
-   Name = "Teleportiere zur Plattform",
+   Name = "Teleport to Spawn",
    Callback = function()
       local player = game.Players.LocalPlayer
       local character = player.Character or player.CharacterAdded:Wait()
@@ -172,7 +172,7 @@ local savedPosition = nil
 
 -- Button zum Speichern der Position
 Tab:CreateButton({
-   Name = "Position speichern",
+   Name = "Save Position",
    Callback = function()
       local character = LocalPlayer.Character
       if character and character:FindFirstChild("HumanoidRootPart") then
@@ -186,7 +186,7 @@ Tab:CreateButton({
 
 -- Button zum Teleportieren zur gespeicherten Position
 Tab:CreateButton({
-   Name = "Zur gespeicherten Position teleportieren",
+   Name = "Teleport to saved Position",
    Callback = function()
       if savedPosition then
          local character = LocalPlayer.Character
@@ -221,7 +221,7 @@ local isSpectating = false
 
 -- Textfeld für Spielernamen
 local Input = Tab:CreateInput({
-   Name = "Spielername eingeben",
+   Name = "Type player name",
    PlaceholderText = "Name des Spielers",
    RemoveTextAfterFocusLost = false,
    Callback = function(Text)
@@ -231,7 +231,7 @@ local Input = Tab:CreateInput({
 
 -- Button zum Teleportieren
 Tab:CreateButton({
-   Name = "Zum Spieler teleportieren",
+   Name = "Teleport to Player",
    Callback = function()
       if playerNameInput ~= "" then
          local targetPlayer = Players:FindFirstChild(playerNameInput)
@@ -260,7 +260,7 @@ Tab:CreateButton({
 
 -- Toggle für Spectate-Funktion
 Tab:CreateToggle({
-   Name = "Spectate Spieler",
+   Name = "Spectate Player",
    CurrentValue = false,
    Flag = "SpectateToggle",
    Callback = function(Value)
