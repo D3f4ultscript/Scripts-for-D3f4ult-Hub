@@ -2,12 +2,12 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/jen
 
 local Window = OrionLib:MakeWindow({Name = "Pet Hatching Simulator 99", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
+-- Main 1 Tab
 local Tab = Window:MakeTab({
 	Name = "⚒ Main 1",
-	Icon = "rbxassetid://4483345998",
+	Icon = "",
 	PremiumOnly = false
 })
-
 
 Tab:AddToggle({
     Name = "Auto Click",
@@ -21,9 +21,7 @@ Tab:AddToggle({
     end
 })
 
-
 local rebirthAmount = 1
-
 local rebirthLabel
 
 Tab:AddToggle({
@@ -55,18 +53,16 @@ Tab:AddTextbox({
 
 rebirthLabel = Tab:AddLabel("Current Rebirth Amount: 1")
 
-
+-- Main 2 Tab
 local Tab = Window:MakeTab({
 	Name = "⚒ Main 2",
-	Icon = "rbxassetid://4483345998",
+	Icon = "",
 	PremiumOnly = false
 })
-
 
 local Section = Tab:AddSection({
 	Name = "GUIS"
 })
-
 
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -80,7 +76,10 @@ local touchParts = {
     {Name = "Pet Adventure", Part = workspace.Scripted.TouchParts.PetAdventure.TouchPart},
     {Name = "Mastery", Part = workspace.Scripted.TouchParts.Mastery.TouchPart},
     {Name = "Bank", Part = workspace.Scripted.TouchParts.Bank.TouchPart},
-    {Name = "200K Shop", Part = workspace.Scripted.TouchParts["200KShop"].TouchPart},
+    {Name = "Cave Upgrades", Part = workspace.Scripted.TouchParts.CaveUpgrades.TouchPart},
+    {Name = "Fantasy Upgrades", Part = workspace.Scripted.TouchParts.EasterUpgrades.TouchPart},
+    {Name = "Index", Part = workspace.Scripted.TouchParts.Index.TouchPart},
+    {Name = "Robux Shop", Part = workspace.Scripted.TouchParts.RobuxShop.TouchPart}
 }
 
 for _, partInfo in ipairs(touchParts) do
@@ -89,7 +88,7 @@ for _, partInfo in ipairs(touchParts) do
         Callback = function()
             local originalPosition = partInfo.Part.CFrame
             partInfo.Part.CFrame = humanoidRootPart.CFrame
-            task.wait(0.1)  -- Kurze Pause, um das Spiel Zeit zum Registrieren der Berührung zu geben
+            task.wait(0.1)
             partInfo.Part.CFrame = originalPosition
         end
     })
@@ -99,11 +98,6 @@ end
 local Section = Tab:AddSection({
 	Name = "Collect Chests"
 })
-
-
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 local chestTouchParts = {
     workspace.Scripted.Chests["100KChest"].TouchPart,
@@ -120,64 +114,107 @@ Tab:AddButton({
         for i, part in ipairs(chestTouchParts) do
             originalPositions[i] = part.CFrame
             part.CFrame = humanoidRootPart.CFrame
-            task.wait(0.1)  -- Kurze Pause, um das Spiel Zeit zum Registrieren der Berührung zu geben
+            task.wait(0.1)
             part.CFrame = originalPositions[i]
         end
     end
 })
 
-
+-- Teleport Tab
 local Tab = Window:MakeTab({
 	Name = "🌀 Teleport",
-	Icon = "rbxassetid://4483345998",
+	Icon = "",
 	PremiumOnly = false
 })
--- KEINE WELTEN ENTFERNEN SONST GEHT ES NICHT MEHR
 
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-local teleportLocations = {
-    {Name = "Magic [soon]", Part = workspace.Scripted.Islands.Magic:GetChildren()[16]},
-    {Name = "Lava", Part = workspace.Scripted.Islands.Lava.SpawnPoint},
-    {Name = "Forest [Event]", Part = workspace.Scripted.Islands.Forest.SpawnPoint},
-    {Name = "Fantasy", Part = workspace.Scripted.Islands["Fantasy Spawn"].SpawnPoint},
-    {Name = "Military Base", Part = workspace.Scripted.Islands["Military Base"].SpawnPoint},
-    {Name = "Mystic", Part = workspace.Scripted.Islands.Mystic.SpawnPoint},
-    {Name = "Pixel World", Part = workspace.Scripted.Islands["Pixel World"].SpawnPoint},
-    {Name = "Spawn", Part = workspace.Scripted.Islands.Spawn.SpawnPoint},
-    {Name = "Swamp", Part = workspace.Scripted.Islands.Swamp.SpawnPoint},
-    {Name = "Time World", Part = workspace.Scripted.Islands["Time World"].SpawnPoint},
+-- SpawnPoints mit benutzerdefinierbaren Namen
+local spawnPoints = {
+    {
+        Path = "workspace.Scripted.Islands['100K Event'].SpawnPoint",
+        Name = "100K Event" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Candy.SpawnPoint",
+        Name = "Candy Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands['Fantasy Spawn'].SpawnPoint",
+        Name = "Fantasy Spawn" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Forest.SpawnPoint",
+        Name = "Forest Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Lava.SpawnPoint",
+        Name = "Lava Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Magic.Model:GetChildren()[2]",
+        Name = "Magic Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands['Military Base'].SpawnPoint",
+        Name = "Military Base" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Mystic.SpawnPoint",
+        Name = "Mystic Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands['Pixel World'].SpawnPoint",
+        Name = "Pixel World" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Spawn.SpawnPoint",
+        Name = "Spawn Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands.Swamp.SpawnPoint",
+        Name = "Swamp Island" -- Ändere diesen Wert für den Button-Namen
+    },
+    {
+        Path = "workspace.Scripted.Islands['Time World'].SpawnPoint",
+        Name = "Time World" -- Ändere diesen Wert für den Button-Namen
+    }
 }
 
-local locationNames = {}
-for _, location in ipairs(teleportLocations) do
-    table.insert(locationNames, location.Name)
-end
-
-Tab:AddDropdown({
-    Name = "Teleport Locations",
-    Default = "Select a location",
-    Options = locationNames,
-    Callback = function(Value)
-        for _, location in ipairs(teleportLocations) do
-            if location.Name == Value then
-                humanoidRootPart.CFrame = location.Part.CFrame
-                break
+-- Buttons erstellen mit benutzerdefinierbaren Namen
+for _, spawnInfo in ipairs(spawnPoints) do
+    Tab:AddButton({
+        Name = spawnInfo.Name, -- Hier wird der benutzerdefinierte Name verwendet
+        Callback = function()
+            local success, spawnPoint = pcall(function()
+                return loadstring("return " .. spawnInfo.Path)()
+            end)
+            
+            if success and spawnPoint then
+                local player = game.Players.LocalPlayer
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    player.Character.HumanoidRootPart.CFrame = spawnPoint.CFrame
+                else
+                    player.CharacterAdded:Connect(function(character)
+                        character:WaitForChild("HumanoidRootPart").CFrame = spawnPoint.CFrame
+                    end)
+                end
+            else
+                OrionLib:Notification({
+                    Title = "Error",
+                    Content = "Invalid spawn point selected.",
+                    Duration = 3
+                })
             end
         end
-    end
-})
+    })
+end
 
 
-
+-- Auto Hatch Tab
 local Tab = Window:MakeTab({
 	Name = "🥚 Auto Hatch",
-	Icon = "rbxassetid://4483345998",
+	Icon = "",
 	PremiumOnly = false
 })
-
 
 local eggTypes = {}
 for _, egg in pairs(workspace.Scripted.EggHolders:GetChildren()) do
@@ -199,7 +236,7 @@ Tab:AddDropdown({
 Tab:AddDropdown({
     Name = "Hatch Type",
     Default = "Single",
-    Options = {"Single", "Triple"},
+    Options = {"Single", "Triple", "Octuple"},
     Callback = function(Value)
         selectedHatchType = Value
     end
@@ -224,19 +261,19 @@ Tab:AddToggle({
 Tab:AddParagraph("❗Warning❗","dont open the Robux Eggs")
 
 
+
+-- Misc Tab
 local Tab = Window:MakeTab({
 	Name = "⚙ Misc",
-	Icon = "rbxassetid://4483345998",
+	Icon = "",
 	PremiumOnly = false
 })
-
 
 -- Button für FPS-Boost
 local fpsBoostButton = Tab:AddButton({
     Name = "FPS Boost",
     Callback = function()
         print("FPS Boost aktiviert")
-        -- Code zum Verschlechtern der Texturen für FPS-Boost
         game:GetService("Lighting").GlobalShadows = false
         game:GetService("Lighting").FogEnd = 9e9
         settings().Rendering.QualityLevel = 1
