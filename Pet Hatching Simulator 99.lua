@@ -9,6 +9,12 @@ local Tab = Window:MakeTab({
 	PremiumOnly = false
 })
 
+
+local Section = Tab:AddSection({
+	Name = "Farming"
+})
+
+
 Tab:AddToggle({
     Name = "Auto Click",
     Default = false,
@@ -52,6 +58,25 @@ Tab:AddTextbox({
 })
 
 rebirthLabel = Tab:AddLabel("Current Rebirth Amount: 1")
+
+
+local Section = Tab:AddSection({
+	Name = "Others"
+})
+
+
+Tab:AddToggle({
+    Name = "Auto Mastery",
+    Default = false,
+    Callback = function(Value)
+        _G.AutoMastery = Value
+        while _G.AutoMastery do
+            game:GetService("ReplicatedStorage").Functions.IncreaseMastery:InvokeServer()
+            task.wait(0.5) -- Anpassbarer Delay
+        end
+    end
+})
+
 
 -- Main 2 Tab
 local Tab = Window:MakeTab({
@@ -268,6 +293,7 @@ local Tab = Window:MakeTab({
 	Icon = "",
 	PremiumOnly = false
 })
+
 
 -- Button für FPS-Boost
 local fpsBoostButton = Tab:AddButton({
