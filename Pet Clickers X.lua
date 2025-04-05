@@ -2,13 +2,13 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Create the main window
 local Window = Rayfield:CreateWindow({
-   Name = "Auto Clicker",
-   LoadingTitle = "Auto Clicker Script",
-   LoadingSubtitle = "by Claude",
+   Name = "Pet Clicker X",
+   LoadingTitle = "Loading ...",
+   LoadingSubtitle = "by D3f4ult",
    ConfigurationSaving = {
       Enabled = true,
       FolderName = "AutoClickerConfig",
-      FileName = "AutoClicker"
+      FileName = ""
    },
    Discord = {
       Enabled = false,
