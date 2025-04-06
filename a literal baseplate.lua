@@ -452,3 +452,118 @@ local Button = Tab:CreateButton({
       tool.Parent = game.Players.LocalPlayer.Backpack
    end,
 })
+
+-- Create a new tab for Info
+local InfoTab = Window:CreateTab("Info", "info")
+
+-- Credits section
+InfoTab:CreateSection("Credits")
+InfoTab:CreateLabel("Made by D3f4ult")
+
+-- Discord button
+InfoTab:CreateButton({
+    Name = "Copy Discord Invite",
+    Callback = function()
+        setclipboard("https://discord.gg/2ynN9zcVFk")
+        Rayfield:Notify({
+            Title = "Discord Link Copied",
+            Content = "Invite link copied to clipboard!",
+            Duration = 3,
+        })
+    end,
+}) 
+
+-- Variables for time tracking
+local startTime = os.time()
+local loadingTime = 0
+
+-- Get the executor name
+local function getExecutor()
+    local executor = identifyexecutor or getexecutorname or function() return "Unknown" end
+    local executorInfo = executor() or "Unknown"
+    
+    -- Try to get executor version if available
+    local version = ""
+    if typeof(getexecutorversion) == "function" then
+        version = getexecutorversion() or ""
+        -- Remove 'v' prefix if it exists
+        if version:sub(1, 1) == "v" then
+            version = version:sub(2)
+        end
+    elseif syn and syn.version then
+        version = tostring(syn.version)
+        -- Remove 'v' prefix if it exists
+        if version:sub(1, 1) == "v" then
+            version = version:sub(2)
+        end
+    elseif KRNL_LOADED and KRNL_VERSION then
+        version = tostring(KRNL_VERSION)
+        -- Remove 'v' prefix if it exists
+        if version:sub(1, 1) == "v" then
+            version = version:sub(2)
+        end
+    end
+    
+    -- Format with version in brackets if version is available
+    if version ~= "" then
+        return executorInfo .. " [Version: " .. version .. "]"
+    else
+        return executorInfo
+    end
+end
+
+-- Function to format time (seconds to MM:SS format)
+local function formatTime(seconds)
+    local minutes = math.floor(seconds / 60)
+    local remainingSeconds = seconds % 60
+    return string.format("%02d:%02d", minutes, remainingSeconds)
+end
+
+-- Function to format account age
+local function formatAccountAge(days)
+    local years = math.floor(days / 365)
+    local remainingDays = days % 365
+    local months = math.floor(remainingDays / 30)
+    remainingDays = remainingDays % 30
+    
+    if years > 0 then
+        return string.format("%d years, %d months, %d days", years, months, remainingDays)
+    elseif months > 0 then
+        return string.format("%d months, %d days", months, remainingDays)
+    else
+        return string.format("%d days", remainingDays)
+    end
+end
+
+-- Section for uptime
+InfoTab:CreateSection("Session Statistics")
+
+-- Label for uptime
+local uptimeLabel = InfoTab:CreateLabel("Session Time: 00:00")
+
+-- Start a timer to update the uptime label
+task.spawn(function()
+    while task.wait(1) do
+        local elapsedTime = os.time() - startTime
+        if uptimeLabel and uptimeLabel.Set then
+            uptimeLabel:Set("Session Time: " .. formatTime(elapsedTime))
+        end
+    end
+end)
+
+-- Section for general info
+InfoTab:CreateSection("System Information")
+
+-- Label for executor
+local executorLabel = InfoTab:CreateLabel("Executor: " .. getExecutor())
+
+-- Get player information
+local player = game.Players.LocalPlayer
+local displayName = player.DisplayName or "Unknown"
+local userName = player.Name or "Unknown"
+local accountAge = player.AccountAge or 0
+
+-- Add player information labels
+InfoTab:CreateLabel("Display Name: " .. displayName)
+InfoTab:CreateLabel("Username: " .. userName)
+InfoTab:CreateLabel("Account Age: " .. formatAccountAge(accountAge)) 
