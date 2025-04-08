@@ -1,31 +1,9 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
--- Helper functions for Info tab
-local function FormatTime(seconds)
-    local hours = math.floor(seconds / 3600)
-    local minutes = math.floor((seconds % 3600) / 60)
-    local secs = seconds % 60
-    return string.format("%02d:%02d:%02d", hours, minutes, secs)
-end
-
-local function GetExecutorInfo()
-    if identifyexecutor then
-        return identifyexecutor()
-    end
-    return "Unknown"
-end
-
-local function GetExecutorVersion()
-    if getexecutorname then
-        return getexecutorname()
-    end
-    return "Unknown"
-end
-
 local Window = Rayfield:CreateWindow({
-    Name = "Model Teleporter",
+    Name = "Sword Fighters Simulator [Beta]",
     LoadingTitle = "Loading...",
-    LoadingSubtitle = "by YourName",
+    LoadingSubtitle = "by D3f4ult",
     ConfigurationSaving = {
         Enabled = true,
         FolderName = "Model Teleporter",
@@ -41,10 +19,6 @@ local Window = Rayfield:CreateWindow({
 local MainTab = Window:CreateTab("Main", 4483362458)
 local TeleportTab = Window:CreateTab("Teleport", 4483362458)
 local MiscTab = Window:CreateTab("Misc", 4483362458)
-local InfoTab = Window:CreateTab("Info", 4483362458)
-
--- Store session start time
-local StartTime = os.time()
 
 -- Store last position
 local lastPosition = nil
@@ -55,95 +29,6 @@ local function savePosition()
     if character and character:FindFirstChild("HumanoidRootPart") then
         lastPosition = character.HumanoidRootPart.CFrame
     end
-end
-
--- Function to freeze player
-local function freezePlayer(character)
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = 0
-            humanoid.JumpPower = 0
-        end
-    end
-end
-
--- Function to unfreeze player
-local function unfreezePlayer(character)
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = 16
-            humanoid.JumpPower = 50
-        end
-    end
-end
-
--- Function to teleport and freeze
-local function teleportAndFreeze(target)
-    local character = game.Players.LocalPlayer.Character
-    if character and character:FindFirstChild("HumanoidRootPart") and target then
-        local head = target:FindFirstChild("Head")
-        if head then
-            savePosition()
-            
-            -- Get current and target positions
-            local currentPos = character.HumanoidRootPart.Position
-            local targetPos = head.Position
-            
-            -- Calculate distance
-            local distance = (currentPos - targetPos).Magnitude
-            
-            -- If distance is too large, teleport in steps
-            if distance > 1000 then
-                local steps = math.ceil(distance / 1000)
-                local stepVector = (targetPos - currentPos) / steps
-                
-                for i = 1, steps do
-                    local stepPos = currentPos + (stepVector * i)
-                    character.HumanoidRootPart.CFrame = CFrame.new(stepPos) * CFrame.new(0, 2, 0)
-                    wait(0.1)
-                end
-            end
-            
-            -- Final teleport to exact position
-            character.HumanoidRootPart.CFrame = head.CFrame * CFrame.new(0, 2, 0)
-            freezePlayer(character)
-            wait(6)
-            unfreezePlayer(character)
-        end
-    end
-end
-
--- Create buttons for each QuestDummy
-local questDummies = {
-    {name = "Area 1", target = workspace.Resources.QuestDummy["Area 1"]},
-    {name = "Area 10", target = workspace.Resources.QuestDummy["Area 10"]},
-    {name = "Area 12", target = workspace.Resources.QuestDummy["Area 12"]},
-    {name = "Area 2", target = workspace.Resources.QuestDummy["Area 2"]},
-    {name = "Area 3", target = workspace.Resources.QuestDummy["Area 3"]},
-    {name = "Area 4", target = workspace.Resources.QuestDummy["Area 4"]},
-    {name = "Area 5", target = workspace.Resources.QuestDummy["Area 5"]},
-    {name = "Area 6", target = workspace.Resources.QuestDummy["Area 6"]},
-    {name = "Area 7", target = workspace.Resources.QuestDummy["Area 7"]},
-    {name = "Area 8", target = workspace.Resources.QuestDummy["Area 8"]},
-    {name = "Area 9", target = workspace.Resources.QuestDummy["Area 9"]},
-    {name = "Dungeon 1", target = workspace.Resources.QuestDummy["Dungeon 1"]},
-    {name = "Egg Master", target = workspace.Resources.QuestDummy["Egg Master"]},
-    {name = "Executioner", target = workspace.Resources.QuestDummy.Executioner},
-    {name = "Power Master", target = workspace.Resources.QuestDummy["Power Master"]},
-    {name = "Soul Teacher", target = workspace.Resources.QuestDummy["Soul Teacher"]},
-    {name = "Sword Master", target = workspace.Resources.QuestDummy["Sword Master"]},
-    {name = "Area 16", target = workspace.Resources.QuestDummy:GetChildren()[16]}
-}
-
-for _, dummy in ipairs(questDummies) do
-    TeleportTab:CreateButton({
-        Name = dummy.name,
-        Callback = function()
-            teleportAndFreeze(dummy.target)
-        end,
-    })
 end
 
 -- Function to get valid models and their sizes
@@ -284,6 +169,47 @@ local TeleportToLargestToggle = MainTab:CreateToggle({
     end,
 })
 
+-- Button to teleport back to last position
+local TeleportBackButton = TeleportTab:CreateButton({
+    Name = "Teleport Back",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character and character:FindFirstChild("HumanoidRootPart") and lastPosition then
+            character.HumanoidRootPart.CFrame = lastPosition
+        end
+    end,
+})
+
+-- Button to teleport to EggCapsule
+local TeleportToEggCapsuleButton = TeleportTab:CreateButton({
+    Name = "Upgrades World 1",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            savePosition() -- Save position before teleporting
+            local target = workspace.Map.UpgradesDetail["Meshes/EggCapsule_Plane"]
+            if target then
+                character.HumanoidRootPart.CFrame = target.CFrame * CFrame.new(0, 2, 0)
+            end
+        end
+    end,
+})
+
+-- Button to teleport to Robux Shop
+local TeleportToRobuxShopButton = TeleportTab:CreateButton({
+    Name = "Robux Shop",
+    Callback = function()
+        local character = game.Players.LocalPlayer.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            savePosition() -- Save position before teleporting
+            local target = workspace.Map.ShopDetail["Meshes/EggCapsule_Plane"]
+            if target then
+                character.HumanoidRootPart.CFrame = target.CFrame * CFrame.new(0, 2, 0)
+            end
+        end
+    end,
+})
+
 -- Button to temporarily teleport chests
 local TeleportChestsButton = MiscTab:CreateButton({
     Name = "Teleport Chests",
@@ -316,70 +242,4 @@ local TeleportChestsButton = MiscTab:CreateButton({
             end
         end
     end,
-})
-
--- Info Tab
-local InfoSection = InfoTab:CreateSection("Credits")
-
--- Credits
-InfoTab:CreateParagraph({
-    Title = "Credits",
-    Content = "Made by D3f4ult"
-})
-
--- Discord Button
-InfoTab:CreateButton({
-    Name = "Join Discord",
-    Callback = function()
-        setclipboard("https://discord.gg/2ynN9zcVFk")
-        Rayfield:Notify({
-            Title = "Discord Invite",
-            Content = "Invite link copied to clipboard!",
-            Duration = 3,
-            Image = 4483362458
-        })
-    end,
-})
-
--- Session Time Section
-local SessionTimeSection = InfoTab:CreateSection("Session Time")
-
--- Session Time
-local SessionTimeText = InfoTab:CreateLabel("Session Time: 0 seconds")
-
--- Update session time loop
-spawn(function()
-    while true do
-        wait(1)
-        local elapsedTime = os.time() - StartTime
-        SessionTimeText:Set("Session Time: " .. FormatTime(elapsedTime))
-        
-        -- Break loop if GUI is destroyed
-        if not SessionTimeText then
-            break
-        end
-    end
-end)
-
--- Executor Info
-local ExecutorSection = InfoTab:CreateSection("Executor Information")
-
-InfoTab:CreateParagraph({
-    Title = "Executor Information",
-    Content = "Executor: " .. GetExecutorInfo() .. "\nVersion: " .. GetExecutorVersion()
-})
-
-InfoTab:CreateLabel("Note: Version information might be inaccurate")
-
--- Player Info
-local PlayerSection = InfoTab:CreateSection("Player Information")
-
-local playerAge = game.Players.LocalPlayer.AccountAge
-local ageText = playerAge == 1 and "1 day" or playerAge .. " days"
-
-InfoTab:CreateParagraph({
-    Title = "Player Information",
-    Content = "Display Name: " .. game.Players.LocalPlayer.DisplayName .. 
-             "\nUsername: " .. game.Players.LocalPlayer.Name .. 
-             "\nAccount Age: " .. ageText
 }) 
