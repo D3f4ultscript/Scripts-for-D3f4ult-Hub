@@ -1,10 +1,10 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Rayfield Example Window",
+   Name = "[🍀UPD] Tap Game [UPDATED🔥🛠]",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Rayfield Interface Suite",
-   LoadingSubtitle = "by Sirius",
+   LoadingTitle = "Loading...",
+   LoadingSubtitle = "by D3f4ult",
    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    DisableRayfieldPrompts = false,
@@ -35,7 +35,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 
-local Tab = Window:CreateTab("🔄 Farm", 4483362458)
+local Tab = Window:CreateTab("Farm", "mouse-pointer-click")
 local Section = Tab:CreateSection("Auto Clicker")
 
 
@@ -117,13 +117,13 @@ local Input = Tab:CreateInput({
        if number and number > 0 then
            rebirthAmount = number
        else
-           rebirthAmount = 1  -- Setzt auf Standardwert bei ungültiger Eingabe
+           rebirthAmount = 1  -- Set to default value for invalid input
        end
    end,
 })
 
 
-local Tab = Window:CreateTab("🥚 Auto Hatch", 4483362458)
+local Tab = Window:CreateTab("Auto Hatch", "egg")
 local Section = Tab:CreateSection("Auto Hatch")
 
 
@@ -213,70 +213,27 @@ end
 -- Aufruf der Funktion zum Erstellen der Dropdowns und des Toggles
 CreateDropdownsAndToggle()
 
-
-local Tab = Window:CreateTab("📅 Events", 4483362458)
-local Section = Tab:CreateSection("Collect Heart Coins")
-
-
-local isTeleporting = false
-local teleportTask
-local currentIndex = 1
-
-local Toggle = Tab:CreateToggle({
-   Name = "Schnell Heart Pickups einsammeln",
-   CurrentValue = false,
-   Flag = "FastTeleportToHeartPickups",
-   Callback = function(Value)
-      isTeleporting = Value
-      if isTeleporting then
-         teleportTask = task.spawn(function()
-            while isTeleporting do
-               local player = game.Players.LocalPlayer
-               local character = player.Character
-               if character and character:FindFirstChild("HumanoidRootPart") then
-                  local hrp = character.HumanoidRootPart
-                  local spawnPoints = workspace.Scripted.HeartPickups.SpawnPoints:GetChildren()
-                  
-                  if #spawnPoints > 0 then
-                     if currentIndex > #spawnPoints then
-                        currentIndex = 1 -- Zurück zum ersten SpawnPoint
-                     end
-                     
-                     local targetSpawnPoint = spawnPoints[currentIndex]
-                     if targetSpawnPoint:IsA("BasePart") then
-                        -- Spieler springen lassen
-                        local humanoid = character:FindFirstChild("Humanoid")
-                        if humanoid then
-                           humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                        end
-
-                        -- Warte kurz, um den Sprung auszuführen
-                        task.wait(0.08)
-
-                        -- Teleportiere den Spieler zum SpawnPoint
-                        hrp.CFrame = targetSpawnPoint.CFrame
-
-                        -- Gehe zum nächsten SpawnPoint
-                        currentIndex = currentIndex + 1
-                     end
-                  end
-               end
-
-               -- Warte 0,2 Sekunden vor dem nächsten Teleport (sehr schnell)
-               task.wait(0.08)
-            end
-         end)
-      else
-         if teleportTask then
-            task.cancel(teleportTask)
-         end
-         currentIndex = 1 -- Zurücksetzen des Indexes, wenn der Toggle deaktiviert wird
-      end
-   end,
+-- Warnhinweis Paragraph hinzufügen
+Tab:CreateParagraph({
+    Title = "⚠️ WARNING",
+    Content = "Do not open Robux eggs or eggs that no longer exist! This could cause problems!",
+    TitleColor = Color3.fromRGB(255, 0, 0),
+    ContentColor = Color3.fromRGB(255, 0, 0)
 })
 
 
-local Tab = Window:CreateTab("📝 Open GUIS", 4483362458)
+local Tab = Window:CreateTab("Events", "calendar")
+local Section = Tab:CreateSection("Events")
+
+Tab:CreateParagraph({
+    Title = "No Active Events",
+    Content = "There are currently no active events available. Check back later for new events!",
+    TitleColor = Color3.fromRGB(255, 255, 255),
+    ContentColor = Color3.fromRGB(200, 200, 200)
+})
+
+
+local Tab = Window:CreateTab("Open GUIS", "layout-grid")
 local Section = Tab:CreateSection("Shops, upgrades ...")
 
 
@@ -287,7 +244,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 local function teleportTouchPart(touchPartPath)
     local touchPart = workspace.Scripted.TouchParts:FindFirstChild(touchPartPath)
     if touchPart and touchPart:FindFirstChild("TouchPart") then
-        local originalPosition = touchPart.TouchPart.Position
+        local originalCFrame = touchPart.TouchPart.CFrame
         local originalParent = touchPart.TouchPart.Parent
 
         -- Teleport TouchPart to player
@@ -295,7 +252,7 @@ local function teleportTouchPart(touchPartPath)
         task.wait(0.1)
 
         -- Teleport TouchPart back
-        touchPart.TouchPart.Position = originalPosition
+        touchPart.TouchPart.CFrame = originalCFrame
     else
         print(touchPartPath .. " TouchPart not found!")
     end
@@ -341,86 +298,52 @@ Tab:CreateButton({
 })
 
 
-local Section = Tab:CreateSection("Events [Valentines]")
+local Section = Tab:CreateSection("Events [St. Patricks]")
 
-
-local Button = Tab:CreateButton({
-   Name = "Open Valentine Prize GUI",
-   Callback = function()
-      local player = game.Players.LocalPlayer
-      local character = player.Character or player.CharacterAdded:Wait()
-      local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-      local touchPart = workspace.Scripted.TouchParts.ValentinePrize:FindFirstChild("TouchPart")
-      if touchPart then
-         local originalPosition = touchPart.CFrame
-         
-         -- Teleportiere TouchPart zum Spieler
-         touchPart.CFrame = humanoidRootPart.CFrame
-         
-         -- Warte 1 Sekunde
-         task.wait(1)
-         
-         -- Teleportiere TouchPart zurück
-         touchPart.CFrame = originalPosition
-      else
-         warn("TouchPart nicht gefunden!")
-      end
-   end,
+-- Button für EventUpgrades
+Tab:CreateButton({
+    Name = "Open Event Upgrades GUI",
+    Callback = function()
+        local touchInterest = workspace.Scripted.TouchParts.EventUpgrades.TouchPart.TouchInterest
+        if touchInterest then
+            firetouchinterest(humanoidRootPart, touchInterest.Parent, 0)
+            task.wait(0.1)
+            firetouchinterest(humanoidRootPart, touchInterest.Parent, 1)
+        else
+            print("Event Upgrades TouchInterest not found!")
+        end
+    end,
 })
 
-
-local Button = Tab:CreateButton({
-   Name = "Open Valentine Shop GUI",
-   Callback = function()
-      local player = game.Players.LocalPlayer
-      local character = player.Character or player.CharacterAdded:Wait()
-      local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-      local touchPart = workspace.Scripted.TouchParts.ValentineShop:FindFirstChild("TouchPart")
-      if touchPart then
-         local originalPosition = touchPart.CFrame
-         
-         -- Teleportiere TouchPart zum Spieler
-         touchPart.CFrame = humanoidRootPart.CFrame
-         
-         -- Warte 1 Sekunde
-         task.wait(1)
-         
-         -- Teleportiere TouchPart zurück
-         touchPart.CFrame = originalPosition
-      else
-         warn("ValentineShop TouchPart nicht gefunden!")
-      end
-   end,
+-- Button für EventPrize
+Tab:CreateButton({
+    Name = "Open Event Prize GUI",
+    Callback = function()
+        local touchInterest = workspace.Scripted.TouchParts.EventPrize.TouchPart.TouchInterest
+        if touchInterest then
+            firetouchinterest(humanoidRootPart, touchInterest.Parent, 0)
+            task.wait(0.1)
+            firetouchinterest(humanoidRootPart, touchInterest.Parent, 1)
+        else
+            print("Event Prize TouchInterest not found!")
+        end
+    end,
 })
 
-
-local Button = Tab:CreateButton({
-   Name = "Open Valentine Upgrades GUI",
-   Callback = function()
-      local player = game.Players.LocalPlayer
-      local character = player.Character or player.CharacterAdded:Wait()
-      local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-      local touchPart = workspace.Scripted.TouchParts.ValentineUpgrades:FindFirstChild("TouchPart")
-      if touchPart then
-         local originalPosition = touchPart.CFrame
-         
-         -- Teleportiere TouchPart zum Spieler
-         touchPart.CFrame = humanoidRootPart.CFrame
-         
-         -- Warte 1 Sekunde
-         task.wait(1)
-         
-         -- Teleportiere TouchPart zurück
-         touchPart.CFrame = originalPosition
-      else
-         warn("ValentineUpgrades TouchPart nicht gefunden!")
-      end
-   end,
+-- Button für EventLuckUpgrader
+Tab:CreateButton({
+    Name = "Open Event Luck Upgrader GUI",
+    Callback = function()
+        local touchInterest = workspace.Scripted.TouchParts.EventLuckUpgrader.TouchPart.TouchInterest
+        if touchInterest then
+            firetouchinterest(humanoidRootPart, touchInterest.Parent, 0)
+            task.wait(0.1)
+            firetouchinterest(humanoidRootPart, touchInterest.Parent, 1)
+        else
+            print("Event Luck Upgrader TouchInterest not found!")
+        end
+    end,
 })
-
 
 local Section = Tab:CreateSection("Reward Houses")
 
@@ -474,7 +397,7 @@ Tab:CreateButton({
 })
 
 
-local Tab = Window:CreateTab("🌀 Teleport", 4483362458)
+local Tab = Window:CreateTab("Teleport", "map-pin")
 local Section = Tab:CreateSection("Teleport")
 
 
@@ -485,18 +408,35 @@ local Button = Tab:CreateButton({
       local character = player.Character or player.CharacterAdded:Wait()
       local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
       
-      local targetPart = workspace.Scripted.Islands.Spawn["LeaderBoard Pets"].Podium["1"].Part
+      local targetPart = workspace.Scripted.Islands.Spawn.Map.Alters:GetChildren()[10]:GetChildren()[2]
       
       if targetPart then
-         humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0, 3, 0) -- Teleportiert etwas über dem Ziel
+         humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0, 3, 0) -- Teleports slightly above the target
       else
-         print("Zielort nicht gefunden")
+         print("Target location not found")
+      end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Teleport to St. Patricks Event",
+   Callback = function()
+      local player = game.Players.LocalPlayer
+      local character = player.Character or player.CharacterAdded:Wait()
+      local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+      
+      local targetPart = workspace.Scripted.Islands["St. Patricks"].Paths:GetChildren()[69].Cream
+      
+      if targetPart then
+         humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0, 3, 0) -- Teleports slightly above the target
+      else
+         print("St. Patricks Event target location not found")
       end
    end,
 })
 
 
-local Tab = Window:CreateTab("⚙ Misc", 4483362458)
+local Tab = Window:CreateTab("Misc", "settings")
 local Section = Tab:CreateSection("Auto Mastery")
 
 
@@ -506,16 +446,16 @@ local Toggle = Tab:CreateToggle({
    Flag = "AutoMasteryToggle",
    Callback = function(Value)
       if Value then
-         -- Starte den Loop
+         -- Start the loop
          _G.AutoMasteryLoop = true
          spawn(function()
             while _G.AutoMasteryLoop do
                game:GetService("ReplicatedStorage").Functions.IncreaseMastery:InvokeServer()
-               wait(1) -- Warte 1 Sekunde
+               wait(1) -- Wait 1 second
             end
          end)
       else
-         -- Stoppe den Loop
+         -- Stop the loop
          _G.AutoMasteryLoop = false
       end
    end,
@@ -547,4 +487,123 @@ local Toggle = Tab:CreateToggle({
          end
       end
    end,
+})
+
+local Section = Tab:CreateSection("Chests")
+
+-- Button zum Auslösen aller Chest TouchInterests
+Tab:CreateButton({
+    Name = "Open All Chests",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        
+        -- Durchsuche alle Modelle im Workspace
+        for _, model in pairs(workspace:GetDescendants()) do
+            if model:IsA("Model") and model.Name:find("Chest") then
+                local touchPart = model:FindFirstChild("TouchPart")
+                if touchPart and touchPart:FindFirstChild("TouchInterest") then
+                    local touchInterest = touchPart.TouchInterest
+                    -- Simuliere Touch
+                    firetouchinterest(humanoidRootPart, touchPart, 0)
+                    task.wait(0.1)
+                    firetouchinterest(humanoidRootPart, touchPart, 1)
+                end
+            end
+        end
+    end,
+})
+
+-- Funktion zum Formatieren der Zeit
+local function FormatTime(seconds)
+    local hours = math.floor(seconds / 3600)
+    local minutes = math.floor((seconds % 3600) / 60)
+    local secs = seconds % 60
+    return string.format("%02d:%02d:%02d", hours, minutes, secs)
+end
+
+-- Funktion zum Abrufen der Executor-Informationen
+local function GetExecutorInfo()
+    if identifyexecutor then
+        return identifyexecutor()
+    end
+    return "Unknown"
+end
+
+-- Funktion zum Abrufen der Executor-Version
+local function GetExecutorVersion()
+    if getexecutorname then
+        return getexecutorname()
+    end
+    return "Unknown"
+end
+
+-- Startzeit für die Session
+local StartTime = os.time()
+
+-- Info Tab
+local InfoTab = Window:CreateTab("Info", "info")
+local InfoSection = InfoTab:CreateSection("Credits")
+
+-- Credits
+InfoTab:CreateParagraph({
+    Title = "Credits",
+    Content = "Made by D3f4ult"
+})
+
+-- Discord Button
+InfoTab:CreateButton({
+    Name = "Join Discord",
+    Callback = function()
+        setclipboard("https://discord.gg/2ynN9zcVFk")
+        Rayfield:Notify({
+            Title = "Discord Invite",
+            Content = "Invite link copied to clipboard!",
+            Duration = 3,
+            Image = 4483362458
+        })
+    end,
+})
+
+-- Session Time Section
+local SessionTimeSection = InfoTab:CreateSection("Session Time")
+
+-- Session Time
+local SessionTimeText = InfoTab:CreateLabel("Session Time: 0 seconds")
+
+-- Update session time loop
+spawn(function()
+    while true do
+        wait(1)
+        local elapsedTime = os.time() - StartTime
+        SessionTimeText:Set("Session Time: " .. FormatTime(elapsedTime))
+        
+        -- Break loop if GUI is destroyed
+        if not SessionTimeText then
+            break
+        end
+    end
+end)
+
+-- Executor Info
+local ExecutorSection = InfoTab:CreateSection("Executor Information")
+
+InfoTab:CreateParagraph({
+    Title = "Executor Information",
+    Content = "Executor: " .. GetExecutorInfo() .. "\nVersion: " .. GetExecutorVersion()
+})
+
+-- Player Info
+local PlayerSection = InfoTab:CreateSection("Player Information")
+
+local player = game.Players.LocalPlayer
+local playerAge = player.AccountAge
+local ageText = playerAge == 1 and "1 day" or playerAge .. " days"
+
+InfoTab:CreateParagraph({
+    Title = "Player Information",
+    Content = "Display Name: " .. player.DisplayName .. 
+             "\nUsername: " .. player.Name .. 
+             "\nAccount Age: " .. ageText
 })
