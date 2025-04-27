@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "[🍀UPD] Tap Game [UPDATED🔥🛠]",
+   Name = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Loading...",
    LoadingSubtitle = "by D3f4ult",
@@ -234,167 +234,41 @@ Tab:CreateParagraph({
 
 
 local Tab = Window:CreateTab("Open GUIS", "layout-grid")
-local Section = Tab:CreateSection("Shops, upgrades ...")
-
+local Section = Tab:CreateSection("Touch Parts")
 
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-local function teleportTouchPart(touchPartPath)
-    local touchPart = workspace.Scripted.TouchParts:FindFirstChild(touchPartPath)
-    if touchPart and touchPart:FindFirstChild("TouchPart") then
-        local originalCFrame = touchPart.TouchPart.CFrame
-        local originalParent = touchPart.TouchPart.Parent
-
-        -- Teleport TouchPart to player
-        touchPart.TouchPart.CFrame = humanoidRootPart.CFrame
-        task.wait(0.1)
-
-        -- Teleport TouchPart back
-        touchPart.TouchPart.CFrame = originalCFrame
-    else
-        print(touchPartPath .. " TouchPart not found!")
+-- Function to create buttons for all TouchParts
+local function createTouchPartButtons()
+    local touchParts = workspace.Scripted.TouchParts:GetChildren()
+    local createdButtons = {} -- Table to track created buttons
+    
+    for _, touchPart in ipairs(touchParts) do
+        if touchPart:FindFirstChild("TouchPart") and not createdButtons[touchPart.Name] then
+            createdButtons[touchPart.Name] = true -- Mark this TouchPart as processed
+            
+            Tab:CreateButton({
+                Name = "Open " .. touchPart.Name .. " GUI",
+                Callback = function()
+                    local touchPartInstance = touchPart.TouchPart
+                    if touchPartInstance then
+                        local originalPosition = touchPartInstance.Position
+                        touchPartInstance.CFrame = humanoidRootPart.CFrame
+                        task.wait(0.1)
+                        touchPartInstance.Position = originalPosition
+                    else
+                        print(touchPart.Name .. " TouchPart not found!")
+                    end
+                end,
+            })
+        end
     end
 end
 
--- Füge Buttons für die TouchParts hinzu
-local buttonData = {
-    {"Upgrades", "Upgrades"},
-    {"Tap Skins", "TapSkins"},
-    {"Rebirth Upgrader", "RebirthUpgrader"},
-    {"Potion Shop", "PotionShop"},
-    {"Luck Upgrader", "LuckUpgrader"},
-    {"Bank", "Bank"},
-    {"Galaxy Upgrades", "GalaxyUpgrades"},
-    {"Galaxy Potions", "GalaxyPotions"},
-    {"Pixel Upgrades", "PixelUpgrades"},
-}
-
-for _, data in ipairs(buttonData) do
-    local buttonName, touchPartPath = unpack(data)
-    Tab:CreateButton({
-        Name = "Open " .. buttonName .. " GUI",
-        Callback = function()
-            teleportTouchPart(touchPartPath)
-        end,
-    })
-end
-
--- Füge den Button für PetAdventure hinzu
-Tab:CreateButton({
-    Name = "Open Pet Adventure GUI",
-    Callback = function()
-        local touchPart = workspace.Scripted.TouchParts.PetAdventure.TouchPart
-        if touchPart then
-            local originalPosition = touchPart.Position
-            touchPart.CFrame = humanoidRootPart.CFrame
-            task.wait(0.1)
-            touchPart.Position = originalPosition
-        else
-            print("Pet Adventure TouchPart not found!")
-        end
-    end,
-})
-
-
-local Section = Tab:CreateSection("Events [St. Patricks]")
-
--- Button für EventUpgrades
-Tab:CreateButton({
-    Name = "Open Event Upgrades GUI",
-    Callback = function()
-        local touchInterest = workspace.Scripted.TouchParts.EventUpgrades.TouchPart.TouchInterest
-        if touchInterest then
-            firetouchinterest(humanoidRootPart, touchInterest.Parent, 0)
-            task.wait(0.1)
-            firetouchinterest(humanoidRootPart, touchInterest.Parent, 1)
-        else
-            print("Event Upgrades TouchInterest not found!")
-        end
-    end,
-})
-
--- Button für EventPrize
-Tab:CreateButton({
-    Name = "Open Event Prize GUI",
-    Callback = function()
-        local touchInterest = workspace.Scripted.TouchParts.EventPrize.TouchPart.TouchInterest
-        if touchInterest then
-            firetouchinterest(humanoidRootPart, touchInterest.Parent, 0)
-            task.wait(0.1)
-            firetouchinterest(humanoidRootPart, touchInterest.Parent, 1)
-        else
-            print("Event Prize TouchInterest not found!")
-        end
-    end,
-})
-
--- Button für EventLuckUpgrader
-Tab:CreateButton({
-    Name = "Open Event Luck Upgrader GUI",
-    Callback = function()
-        local touchInterest = workspace.Scripted.TouchParts.EventLuckUpgrader.TouchPart.TouchInterest
-        if touchInterest then
-            firetouchinterest(humanoidRootPart, touchInterest.Parent, 0)
-            task.wait(0.1)
-            firetouchinterest(humanoidRootPart, touchInterest.Parent, 1)
-        else
-            print("Event Luck Upgrader TouchInterest not found!")
-        end
-    end,
-})
-
-local Section = Tab:CreateSection("Reward Houses")
-
-
--- Button für GemRewardHouse
-Tab:CreateButton({
-    Name = "Open Gem Reward House GUI",
-    Callback = function()
-        local touchPart = workspace.Scripted.TouchParts.GemRewardHouse.TouchPart
-        if touchPart then
-            local originalPosition = touchPart.Position
-            touchPart.CFrame = humanoidRootPart.CFrame
-            task.wait(0.1)
-            touchPart.Position = originalPosition
-        else
-            print("Gem Reward House TouchPart not found!")
-        end
-    end,
-})
-
--- Button für GalaxyRewardHouse
-Tab:CreateButton({
-    Name = "Open Galaxy Reward House GUI",
-    Callback = function()
-        local touchPart = workspace.Scripted.TouchParts.GalaxyRewardHouse.TouchPart
-        if touchPart then
-            local originalPosition = touchPart.Position
-            touchPart.CFrame = humanoidRootPart.CFrame
-            task.wait(0.1)
-            touchPart.Position = originalPosition
-        else
-            print("Galaxy Reward House TouchPart not found!")
-        end
-    end,
-})
-
--- Button für PixelPrize
-Tab:CreateButton({
-    Name = "Open Pixel Prize GUI",
-    Callback = function()
-        local touchPart = workspace.Scripted.TouchParts.PixelPrize.TouchPart
-        if touchPart then
-            local originalPosition = touchPart.Position
-            touchPart.CFrame = humanoidRootPart.CFrame
-            task.wait(0.1)
-            touchPart.Position = originalPosition
-        else
-            print("Pixel Prize TouchPart not found!")
-        end
-    end,
-})
+-- Create buttons for all TouchParts
+createTouchPartButtons()
 
 
 local Tab = Window:CreateTab("Teleport", "map-pin")
@@ -437,7 +311,7 @@ local Button = Tab:CreateButton({
 
 
 local Tab = Window:CreateTab("Misc", "settings")
-local Section = Tab:CreateSection("Auto Mastery")
+local Section = Tab:CreateSection("Auto Features")
 
 
 local Toggle = Tab:CreateToggle({
@@ -462,9 +336,6 @@ local Toggle = Tab:CreateToggle({
 })
 
 
-local Section = Tab:CreateSection("Auto Super Rebirth")
-
-
 local isRunning = false
 local rebirthTask
 
@@ -484,6 +355,30 @@ local Toggle = Tab:CreateToggle({
       else
          if rebirthTask then
             task.cancel(rebirthTask)
+         end
+      end
+   end,
+})
+
+local isRanking = false
+local rankTask
+
+local Toggle = Tab:CreateToggle({
+   Name = "Auto Rank Up",
+   CurrentValue = false,
+   Flag = "AutoRankToggle",
+   Callback = function(Value)
+      isRanking = Value
+      if isRanking then
+         rankTask = task.spawn(function()
+            while isRanking do
+               game:GetService("ReplicatedStorage").Events.RankUp:FireServer()
+               task.wait(1)
+            end
+         end)
+      else
+         if rankTask then
+            task.cancel(rankTask)
          end
       end
    end,
