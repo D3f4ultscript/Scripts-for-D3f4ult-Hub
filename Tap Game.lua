@@ -292,23 +292,6 @@ local Button = Tab:CreateButton({
    end,
 })
 
-local Button = Tab:CreateButton({
-   Name = "Teleport to St. Patricks Event",
-   Callback = function()
-      local player = game.Players.LocalPlayer
-      local character = player.Character or player.CharacterAdded:Wait()
-      local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-      
-      local targetPart = workspace.Scripted.Islands["St. Patricks"].Paths:GetChildren()[69].Cream
-      
-      if targetPart then
-         humanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0, 3, 0) -- Teleports slightly above the target
-      else
-         print("St. Patricks Event target location not found")
-      end
-   end,
-})
-
 
 local Tab = Window:CreateTab("Misc", "settings")
 local Section = Tab:CreateSection("Auto Features")
@@ -325,7 +308,7 @@ local Toggle = Tab:CreateToggle({
          spawn(function()
             while _G.AutoMasteryLoop do
                game:GetService("ReplicatedStorage").Functions.IncreaseMastery:InvokeServer()
-               wait(1) -- Wait 1 second
+               wait(0.2) -- Wait 0.2 seconds
             end
          end)
       else
