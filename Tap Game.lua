@@ -52,11 +52,15 @@ local Toggle = Tab:CreateToggle({
                 while true do
                     if not AutoClickEnabled then break end
                     
-                    pcall(function()
+                    local success, error = pcall(function()
                         game:GetService("ReplicatedStorage").Events.Click:FireServer()
                     end)
                     
-                    task.wait(0.02)
+                    if not success then
+                        warn("Click Error: " .. tostring(error))
+                    end
+                    
+                    task.wait(0.1) -- Optimierte Wartezeit
                 end
             end)
         else
@@ -93,7 +97,7 @@ local Toggle = Tab:CreateToggle({
                         warn("Rebirth Error: " .. tostring(error))
                     end
                     
-                    task.wait(0.2)  -- Pause zwischen Rebirths, anpassbar
+                    task.wait(0.3)  -- Optimierte Wartezeit
                 end
             end)
         else
@@ -308,7 +312,7 @@ local Toggle = Tab:CreateToggle({
          spawn(function()
             while _G.AutoMasteryLoop do
                game:GetService("ReplicatedStorage").Functions.IncreaseMastery:InvokeServer()
-               wait(0.2) -- Wait 0.2 seconds
+               wait(0.3) -- Wait 0.3 seconds
             end
          end)
       else
@@ -332,7 +336,7 @@ local Toggle = Tab:CreateToggle({
          rebirthTask = task.spawn(function()
             while isRunning do
                game:GetService("ReplicatedStorage").Functions.IncreaseRebirth:InvokeServer()
-               task.wait(1) -- Führt die Funktion so schnell wie möglich aus
+               task.wait(0.3) -- Führt die Funktion so schnell wie möglich aus
             end
          end)
       else
@@ -365,6 +369,42 @@ local Toggle = Tab:CreateToggle({
          end
       end
    end,
+})
+
+local Section = Tab:CreateSection("Rejoin")
+
+Tab:CreateButton({
+    Name = "Rejoin Same Server",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        local success, error = pcall(function()
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+        end)
+        
+        if not success then
+            warn("Rejoin Error: " .. tostring(error))
+        end
+    end,
+})
+
+Tab:CreateButton({
+    Name = "Rejoin Game",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        local success, error = pcall(function()
+            TeleportService:Teleport(game.PlaceId)
+        end)
+        
+        if not success then
+            warn("Rejoin Error: " .. tostring(error))
+        end
+    end,
 })
 
 local Section = Tab:CreateSection("Chests")
