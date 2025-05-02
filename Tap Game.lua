@@ -130,6 +130,37 @@ local Input = Tab:CreateInput({
 local Tab = Window:CreateTab("Auto Hatch", "egg")
 local Section = Tab:CreateSection("Auto Hatch")
 
+local isRemovingFrames = false
+local removeFramesTask
+
+local Toggle = Tab:CreateToggle({
+    Name = "Remove Hatch Frames",
+    CurrentValue = false,
+    Flag = "RemoveFramesToggle",
+    Callback = function(Value)
+        isRemovingFrames = Value
+        if isRemovingFrames then
+            removeFramesTask = task.spawn(function()
+                while isRemovingFrames do
+                    local hatchDisplay = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("HatchDisplay")
+                    if hatchDisplay then
+                        -- Nur ViewportFrames zerstören
+                        for _, child in ipairs(hatchDisplay:GetChildren()) do
+                            if child:IsA("ViewportFrame") then
+                                child:Destroy()
+                            end
+                        end
+                    end
+                    task.wait()
+                end
+            end)
+        else
+            if removeFramesTask then
+                task.cancel(removeFramesTask)
+            end
+        end
+    end,
+})
 
 -- Funktion zum Erstellen der Dropdowns und des Toggles
 local function CreateDropdownsAndToggle()
