@@ -13,7 +13,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 -- Create Main Tab
-local MainTab = Window:CreateTab("Main", 4483362458)
+local MainTab = Window:CreateTab("Main", "diamond")
 
 -- Create sections
 local ClickSection = MainTab:CreateSection("Clicking")
@@ -147,7 +147,7 @@ local AutoCraftToggle = MainTab:CreateToggle({
 })
 
 -- Create Auto Hatch Tab
-local AutoHatchTab = Window:CreateTab("Auto Hatch", 4483362458)
+local AutoHatchTab = Window:CreateTab("Auto Hatch", "egg")
 
 -- Create sections for Auto Hatch
 local HatchModeSection = AutoHatchTab:CreateSection("Hatch Mode")
@@ -202,7 +202,7 @@ for _, eggHolder in pairs(workspace.Scripted.EggHolders:GetChildren()) do
 end
 
 -- Create GUIs Tab (positioned after Auto Hatch)
-local GUIsTab = Window:CreateTab("GUIs", 4483362458)
+local GUIsTab = Window:CreateTab("GUIs", "layout")
 
 -- Create section for GUIs
 local TouchPartsSection = GUIsTab:CreateSection("Touch Parts")
@@ -225,7 +225,7 @@ for _, model in pairs(workspace.Scripted.TouchParts:GetChildren()) do
 end
 
 -- Create Misc Tab
-local MiscTab = Window:CreateTab("Misc", 4483362458)
+local MiscTab = Window:CreateTab("Misc", "settings")
 
 -- Create section for Misc
 local ServerSection = MiscTab:CreateSection("Server Options")
